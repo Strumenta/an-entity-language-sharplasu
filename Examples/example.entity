@@ -1,0 +1,28 @@
+﻿module example
+
+import standard
+
+class base {
+	name string
+	description string
+}
+
+class aged : base {
+	age integer
+}
+
+class person : aged {
+	speed integer = 2
+}
+
+class athlete : person {
+	speed integer = person.speed * 2
+}
+
+class building : base {
+	address string
+}
+
+class car : aged {
+	kilometers integer = age * 10000
+}
