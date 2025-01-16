@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Strumenta.Entity.Semantics;
 using Strumenta.Sharplasu.Model;
 
 namespace Strumenta.Entity
@@ -30,7 +31,7 @@ namespace Strumenta.Entity
         }
     }
 
-    public class TypeDecl : Node, Named
+    public class TypeDecl : Node, Named, IType
     {
         public string Name { get; set; }
 
@@ -131,6 +132,16 @@ namespace Strumenta.Entity
         public long Value { get; set; }
 
         public IntegerLiteralExpression(long value)
+        {
+            Value = value;
+        }
+    }
+
+    public class RealLiteralExpression : LiteralExpression
+    {
+        public double Value { get; set; }
+
+        public RealLiteralExpression(double value)
         {
             Value = value;
         }

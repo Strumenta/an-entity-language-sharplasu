@@ -37,32 +37,28 @@ public partial class AntlrEntityParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
-		ENTITY=1, MODULE=2, IMPORT=3, RETURN=4, LET=5, NEW=6, COLON=7, SEMI=8, 
-		COMMA=9, DOT=10, LSQRD=11, RSQRD=12, LCRLY=13, RCRLY=14, LPAREN=15, RPAREN=16, 
-		ADD=17, SUB=18, MUL=19, DIV=20, EQ=21, STRING=22, INTEGER=23, BOOLEAN=24, 
-		ID=25, COMMENT=26, WS=27;
+		KW_CLASS=1, MODULE=2, IMPORT=3, TYPE=4, COLON=5, SEMI=6, COMMA=7, DOT=8, 
+		LSQRD=9, RSQRD=10, LCRLY=11, RCRLY=12, LPAREN=13, RPAREN=14, ADD=15, SUB=16, 
+		MUL=17, DIV=18, EQ=19, STRING=20, INTEGER=21, BOOLEAN=22, REAL=23, ID=24, 
+		COMMENT=25, WS=26;
 	public const int
-		RULE_module_declaration = 0, RULE_module_import = 1, RULE_entity_declaration = 2, 
-		RULE_feature_declaration = 3, RULE_operation_declaration = 4, RULE_parameter_declaration = 5, 
-		RULE_statement = 6, RULE_binding_statement = 7, RULE_variable_declaration = 8, 
-		RULE_return_statement = 9, RULE_expression = 10, RULE_argument_list = 11, 
-		RULE_literal = 12;
+		RULE_module_declaration = 0, RULE_module_import = 1, RULE_type_declaration = 2, 
+		RULE_entity_declaration = 3, RULE_feature_declaration = 4, RULE_assignment = 5, 
+		RULE_expression = 6, RULE_literal = 7;
 	public static readonly string[] ruleNames = {
-		"module_declaration", "module_import", "entity_declaration", "feature_declaration", 
-		"operation_declaration", "parameter_declaration", "statement", "binding_statement", 
-		"variable_declaration", "return_statement", "expression", "argument_list", 
-		"literal"
+		"module_declaration", "module_import", "type_declaration", "entity_declaration", 
+		"feature_declaration", "assignment", "expression", "literal"
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'entity'", "'module'", "'import'", "'return'", "'let'", "'new'", 
-		"':'", "';'", "','", "'.'", "'['", "']'", "'{'", "'}'", "'('", "')'", 
-		"'+'", "'-'", "'*'", "'/'", "'='"
+		null, "'class'", "'module'", "'import'", "'type'", "':'", "';'", "','", 
+		"'.'", "'['", "']'", "'{'", "'}'", "'('", "')'", "'+'", "'-'", "'*'", 
+		"'/'", "'='"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "ENTITY", "MODULE", "IMPORT", "RETURN", "LET", "NEW", "COLON", "SEMI", 
-		"COMMA", "DOT", "LSQRD", "RSQRD", "LCRLY", "RCRLY", "LPAREN", "RPAREN", 
-		"ADD", "SUB", "MUL", "DIV", "EQ", "STRING", "INTEGER", "BOOLEAN", "ID", 
+		null, "KW_CLASS", "MODULE", "IMPORT", "TYPE", "COLON", "SEMI", "COMMA", 
+		"DOT", "LSQRD", "RSQRD", "LCRLY", "RCRLY", "LPAREN", "RPAREN", "ADD", 
+		"SUB", "MUL", "DIV", "EQ", "STRING", "INTEGER", "BOOLEAN", "REAL", "ID", 
 		"COMMENT", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
@@ -101,6 +97,8 @@ public partial class AntlrEntityParser : Parser {
 		public IToken name;
 		public Module_importContext _module_import;
 		public IList<Module_importContext> _imports = new List<Module_importContext>();
+		public Type_declarationContext _type_declaration;
+		public IList<Type_declarationContext> _types = new List<Type_declarationContext>();
 		public Entity_declarationContext _entity_declaration;
 		public IList<Entity_declarationContext> _entities = new List<Entity_declarationContext>();
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MODULE() { return GetToken(AntlrEntityParser.MODULE, 0); }
@@ -110,6 +108,12 @@ public partial class AntlrEntityParser : Parser {
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public Module_importContext module_import(int i) {
 			return GetRuleContext<Module_importContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public Type_declarationContext[] type_declaration() {
+			return GetRuleContexts<Type_declarationContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public Type_declarationContext type_declaration(int i) {
+			return GetRuleContext<Type_declarationContext>(i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public Entity_declarationContext[] entity_declaration() {
 			return GetRuleContexts<Entity_declarationContext>();
@@ -132,37 +136,52 @@ public partial class AntlrEntityParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 26;
+			State = 16;
 			Match(MODULE);
-			State = 27;
+			State = 17;
 			_localctx.name = Match(ID);
-			State = 31;
+			State = 21;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==IMPORT) {
 				{
 				{
-				State = 28;
+				State = 18;
 				_localctx._module_import = module_import();
 				_localctx._imports.Add(_localctx._module_import);
 				}
 				}
-				State = 33;
+				State = 23;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 37;
+			State = 27;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==ENTITY) {
+			while (_la==TYPE) {
 				{
 				{
-				State = 34;
+				State = 24;
+				_localctx._type_declaration = type_declaration();
+				_localctx._types.Add(_localctx._type_declaration);
+				}
+				}
+				State = 29;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			State = 33;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==KW_CLASS) {
+				{
+				{
+				State = 30;
 				_localctx._entity_declaration = entity_declaration();
 				_localctx._entities.Add(_localctx._entity_declaration);
 				}
 				}
-				State = 39;
+				State = 35;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -197,9 +216,44 @@ public partial class AntlrEntityParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 40;
+			State = 36;
 			Match(IMPORT);
-			State = 41;
+			State = 37;
+			_localctx.name = Match(ID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Type_declarationContext : ParserRuleContext {
+		public IToken name;
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode TYPE() { return GetToken(AntlrEntityParser.TYPE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(AntlrEntityParser.ID, 0); }
+		public Type_declarationContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_type_declaration; } }
+	}
+
+	[RuleVersion(0)]
+	public Type_declarationContext type_declaration() {
+		Type_declarationContext _localctx = new Type_declarationContext(Context, State);
+		EnterRule(_localctx, 4, RULE_type_declaration);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 39;
+			Match(TYPE);
+			State = 40;
 			_localctx.name = Match(ID);
 			}
 		}
@@ -216,25 +270,22 @@ public partial class AntlrEntityParser : Parser {
 
 	public partial class Entity_declarationContext : ParserRuleContext {
 		public IToken name;
+		public IToken base_class;
 		public Feature_declarationContext _feature_declaration;
 		public IList<Feature_declarationContext> _features = new List<Feature_declarationContext>();
-		public Operation_declarationContext _operation_declaration;
-		public IList<Operation_declarationContext> _operations = new List<Operation_declarationContext>();
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ENTITY() { return GetToken(AntlrEntityParser.ENTITY, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(AntlrEntityParser.ID, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode KW_CLASS() { return GetToken(AntlrEntityParser.KW_CLASS, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LCRLY() { return GetToken(AntlrEntityParser.LCRLY, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RCRLY() { return GetToken(AntlrEntityParser.RCRLY, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(AntlrEntityParser.ID); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
+			return GetToken(AntlrEntityParser.ID, i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(AntlrEntityParser.COLON, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public Feature_declarationContext[] feature_declaration() {
 			return GetRuleContexts<Feature_declarationContext>();
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public Feature_declarationContext feature_declaration(int i) {
 			return GetRuleContext<Feature_declarationContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public Operation_declarationContext[] operation_declaration() {
-			return GetRuleContexts<Operation_declarationContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public Operation_declarationContext operation_declaration(int i) {
-			return GetRuleContext<Operation_declarationContext>(i);
 		}
 		public Entity_declarationContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -246,60 +297,46 @@ public partial class AntlrEntityParser : Parser {
 	[RuleVersion(0)]
 	public Entity_declarationContext entity_declaration() {
 		Entity_declarationContext _localctx = new Entity_declarationContext(Context, State);
-		EnterRule(_localctx, 4, RULE_entity_declaration);
+		EnterRule(_localctx, 6, RULE_entity_declaration);
 		int _la;
 		try {
-			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
+			State = 42;
+			Match(KW_CLASS);
 			State = 43;
-			Match(ENTITY);
-			State = 44;
 			_localctx.name = Match(ID);
-			State = 59;
+			State = 46;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==LCRLY) {
+			if (_la==COLON) {
 				{
+				State = 44;
+				Match(COLON);
 				State = 45;
-				Match(LCRLY);
-				State = 49;
-				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
-				while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
-					if ( _alt==1 ) {
-						{
-						{
-						State = 46;
-						_localctx._feature_declaration = feature_declaration();
-						_localctx._features.Add(_localctx._feature_declaration);
-						}
-						} 
-					}
-					State = 51;
-					ErrorHandler.Sync(this);
-					_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
-				}
-				State = 55;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				while (_la==ID) {
-					{
-					{
-					State = 52;
-					_localctx._operation_declaration = operation_declaration();
-					_localctx._operations.Add(_localctx._operation_declaration);
-					}
-					}
-					State = 57;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-				}
-				State = 58;
-				Match(RCRLY);
+				_localctx.base_class = Match(ID);
 				}
 			}
 
+			State = 48;
+			Match(LCRLY);
+			State = 52;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==ID) {
+				{
+				{
+				State = 49;
+				_localctx._feature_declaration = feature_declaration();
+				_localctx._features.Add(_localctx._feature_declaration);
+				}
+				}
+				State = 54;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			State = 55;
+			Match(RCRLY);
 			}
 		}
 		catch (RecognitionException re) {
@@ -321,6 +358,9 @@ public partial class AntlrEntityParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
 			return GetToken(AntlrEntityParser.ID, i);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public AssignmentContext assignment() {
+			return GetRuleContext<AssignmentContext>(0);
+		}
 		public Feature_declarationContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -331,233 +371,27 @@ public partial class AntlrEntityParser : Parser {
 	[RuleVersion(0)]
 	public Feature_declarationContext feature_declaration() {
 		Feature_declarationContext _localctx = new Feature_declarationContext(Context, State);
-		EnterRule(_localctx, 6, RULE_feature_declaration);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 61;
-			_localctx.name = Match(ID);
-			State = 62;
-			Match(COLON);
-			State = 63;
-			_localctx.type = Match(ID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Operation_declarationContext : ParserRuleContext {
-		public IToken name;
-		public Parameter_declarationContext _parameter_declaration;
-		public IList<Parameter_declarationContext> _parameters = new List<Parameter_declarationContext>();
-		public IToken type;
-		public StatementContext _statement;
-		public IList<StatementContext> _statements = new List<StatementContext>();
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAREN() { return GetToken(AntlrEntityParser.LPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAREN() { return GetToken(AntlrEntityParser.RPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LCRLY() { return GetToken(AntlrEntityParser.LCRLY, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RCRLY() { return GetToken(AntlrEntityParser.RCRLY, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(AntlrEntityParser.ID); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
-			return GetToken(AntlrEntityParser.ID, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(AntlrEntityParser.COLON, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public Parameter_declarationContext[] parameter_declaration() {
-			return GetRuleContexts<Parameter_declarationContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public Parameter_declarationContext parameter_declaration(int i) {
-			return GetRuleContext<Parameter_declarationContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public StatementContext[] statement() {
-			return GetRuleContexts<StatementContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement(int i) {
-			return GetRuleContext<StatementContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(AntlrEntityParser.COMMA); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
-			return GetToken(AntlrEntityParser.COMMA, i);
-		}
-		public Operation_declarationContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_operation_declaration; } }
-	}
-
-	[RuleVersion(0)]
-	public Operation_declarationContext operation_declaration() {
-		Operation_declarationContext _localctx = new Operation_declarationContext(Context, State);
-		EnterRule(_localctx, 8, RULE_operation_declaration);
+		EnterRule(_localctx, 8, RULE_feature_declaration);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 65;
+			State = 57;
 			_localctx.name = Match(ID);
-			State = 66;
-			Match(LPAREN);
-			State = 75;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if (_la==ID) {
-				{
-				State = 67;
-				_localctx._parameter_declaration = parameter_declaration();
-				_localctx._parameters.Add(_localctx._parameter_declaration);
-				State = 72;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				while (_la==COMMA) {
-					{
-					{
-					State = 68;
-					Match(COMMA);
-					State = 69;
-					_localctx._parameter_declaration = parameter_declaration();
-					_localctx._parameters.Add(_localctx._parameter_declaration);
-					}
-					}
-					State = 74;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-				}
-				}
-			}
-
-			State = 77;
-			Match(RPAREN);
-			State = 80;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if (_la==COLON) {
-				{
-				State = 78;
-				Match(COLON);
-				State = 79;
-				_localctx.type = Match(ID);
-				}
-			}
-
-			State = 82;
-			Match(LCRLY);
-			State = 86;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			while (_la==RETURN || _la==LET) {
-				{
-				{
-				State = 83;
-				_localctx._statement = statement();
-				_localctx._statements.Add(_localctx._statement);
-				}
-				}
-				State = 88;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-			}
-			State = 89;
-			Match(RCRLY);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Parameter_declarationContext : ParserRuleContext {
-		public IToken name;
-		public IToken type;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(AntlrEntityParser.COLON, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(AntlrEntityParser.ID); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
-			return GetToken(AntlrEntityParser.ID, i);
-		}
-		public Parameter_declarationContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_parameter_declaration; } }
-	}
-
-	[RuleVersion(0)]
-	public Parameter_declarationContext parameter_declaration() {
-		Parameter_declarationContext _localctx = new Parameter_declarationContext(Context, State);
-		EnterRule(_localctx, 10, RULE_parameter_declaration);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 91;
-			_localctx.name = Match(ID);
-			State = 92;
+			State = 58;
 			Match(COLON);
-			State = 93;
+			State = 59;
 			_localctx.type = Match(ID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class StatementContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public Binding_statementContext binding_statement() {
-			return GetRuleContext<Binding_statementContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public Return_statementContext return_statement() {
-			return GetRuleContext<Return_statementContext>(0);
-		}
-		public StatementContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_statement; } }
-	}
-
-	[RuleVersion(0)]
-	public StatementContext statement() {
-		StatementContext _localctx = new StatementContext(Context, State);
-		EnterRule(_localctx, 12, RULE_statement);
-		try {
-			State = 97;
+			State = 61;
 			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case LET:
-				EnterOuterAlt(_localctx, 1);
+			_la = TokenStream.LA(1);
+			if (_la==EQ) {
 				{
-				State = 95;
-				binding_statement();
+				State = 60;
+				assignment();
 				}
-				break;
-			case RETURN:
-				EnterOuterAlt(_localctx, 2);
-				{
-				State = 96;
-				return_statement();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -571,117 +405,29 @@ public partial class AntlrEntityParser : Parser {
 		return _localctx;
 	}
 
-	public partial class Binding_statementContext : ParserRuleContext {
-		public Variable_declarationContext variable;
-		public ExpressionContext value;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LET() { return GetToken(AntlrEntityParser.LET, 0); }
+	public partial class AssignmentContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode EQ() { return GetToken(AntlrEntityParser.EQ, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public Variable_declarationContext variable_declaration() {
-			return GetRuleContext<Variable_declarationContext>(0);
-		}
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
 			return GetRuleContext<ExpressionContext>(0);
 		}
-		public Binding_statementContext(ParserRuleContext parent, int invokingState)
+		public AssignmentContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_binding_statement; } }
+		public override int RuleIndex { get { return RULE_assignment; } }
 	}
 
 	[RuleVersion(0)]
-	public Binding_statementContext binding_statement() {
-		Binding_statementContext _localctx = new Binding_statementContext(Context, State);
-		EnterRule(_localctx, 14, RULE_binding_statement);
+	public AssignmentContext assignment() {
+		AssignmentContext _localctx = new AssignmentContext(Context, State);
+		EnterRule(_localctx, 10, RULE_assignment);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 99;
-			Match(LET);
-			State = 100;
-			_localctx.variable = variable_declaration();
-			State = 101;
+			State = 63;
 			Match(EQ);
-			State = 102;
-			_localctx.value = expression(0);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Variable_declarationContext : ParserRuleContext {
-		public IToken name;
-		public IToken type;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(AntlrEntityParser.COLON, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(AntlrEntityParser.ID); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
-			return GetToken(AntlrEntityParser.ID, i);
-		}
-		public Variable_declarationContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_variable_declaration; } }
-	}
-
-	[RuleVersion(0)]
-	public Variable_declarationContext variable_declaration() {
-		Variable_declarationContext _localctx = new Variable_declarationContext(Context, State);
-		EnterRule(_localctx, 16, RULE_variable_declaration);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 104;
-			_localctx.name = Match(ID);
-			State = 105;
-			Match(COLON);
-			State = 106;
-			_localctx.type = Match(ID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Return_statementContext : ParserRuleContext {
-		public ExpressionContext value;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RETURN() { return GetToken(AntlrEntityParser.RETURN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
-			return GetRuleContext<ExpressionContext>(0);
-		}
-		public Return_statementContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_return_statement; } }
-	}
-
-	[RuleVersion(0)]
-	public Return_statementContext return_statement() {
-		Return_statementContext _localctx = new Return_statementContext(Context, State);
-		EnterRule(_localctx, 18, RULE_return_statement);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 108;
-			Match(RETURN);
-			State = 109;
-			_localctx.value = expression(0);
+			State = 64;
+			expression(0);
 			}
 		}
 		catch (RecognitionException re) {
@@ -708,13 +454,13 @@ public partial class AntlrEntityParser : Parser {
 		}
 	}
 	public partial class Reference_expressionContext : ExpressionContext {
-		public ExpressionContext context;
+		public IToken context;
 		public IToken target;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(AntlrEntityParser.ID, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOT() { return GetToken(AntlrEntityParser.DOT, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
-			return GetRuleContext<ExpressionContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(AntlrEntityParser.ID); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
+			return GetToken(AntlrEntityParser.ID, i);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOT() { return GetToken(AntlrEntityParser.DOT, 0); }
 		public Reference_expressionContext(ExpressionContext context) { CopyFrom(context); }
 	}
 	public partial class Operator_expressionContext : ExpressionContext {
@@ -733,34 +479,11 @@ public partial class AntlrEntityParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DIV() { return GetToken(AntlrEntityParser.DIV, 0); }
 		public Operator_expressionContext(ExpressionContext context) { CopyFrom(context); }
 	}
-	public partial class Constructor_expressionContext : ExpressionContext {
-		public IToken name;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NEW() { return GetToken(AntlrEntityParser.NEW, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public Argument_listContext argument_list() {
-			return GetRuleContext<Argument_listContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(AntlrEntityParser.ID, 0); }
-		public Constructor_expressionContext(ExpressionContext context) { CopyFrom(context); }
-	}
 	public partial class Literal_expressionContext : ExpressionContext {
-		public IToken value;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(AntlrEntityParser.STRING, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INTEGER() { return GetToken(AntlrEntityParser.INTEGER, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BOOLEAN() { return GetToken(AntlrEntityParser.BOOLEAN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public LiteralContext literal() {
+			return GetRuleContext<LiteralContext>(0);
+		}
 		public Literal_expressionContext(ExpressionContext context) { CopyFrom(context); }
-	}
-	public partial class Invocation_expressionContext : ExpressionContext {
-		public ExpressionContext context;
-		public IToken target;
-		[System.Diagnostics.DebuggerNonUserCode] public Argument_listContext argument_list() {
-			return GetRuleContext<Argument_listContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(AntlrEntityParser.ID, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOT() { return GetToken(AntlrEntityParser.DOT, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
-			return GetRuleContext<ExpressionContext>(0);
-		}
-		public Invocation_expressionContext(ExpressionContext context) { CopyFrom(context); }
 	}
 
 	[RuleVersion(0)]
@@ -773,101 +496,76 @@ public partial class AntlrEntityParser : Parser {
 		int _parentState = State;
 		ExpressionContext _localctx = new ExpressionContext(Context, _parentState);
 		ExpressionContext _prevctx = _localctx;
-		int _startState = 20;
-		EnterRecursionRule(_localctx, 20, RULE_expression, _p);
+		int _startState = 12;
+		EnterRecursionRule(_localctx, 12, RULE_expression, _p);
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 121;
+			State = 73;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,10,Context) ) {
-			case 1:
-				{
-				_localctx = new Invocation_expressionContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-
-				State = 112;
-				((Invocation_expressionContext)_localctx).target = Match(ID);
-				State = 113;
-				argument_list();
-				}
-				break;
-			case 2:
+			switch (TokenStream.LA(1)) {
+			case ID:
 				{
 				_localctx = new Reference_expressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 114;
+
+				State = 69;
+				ErrorHandler.Sync(this);
+				switch ( Interpreter.AdaptivePredict(TokenStream,6,Context) ) {
+				case 1:
+					{
+					State = 67;
+					((Reference_expressionContext)_localctx).context = Match(ID);
+					State = 68;
+					Match(DOT);
+					}
+					break;
+				}
+				State = 71;
 				((Reference_expressionContext)_localctx).target = Match(ID);
 				}
 				break;
-			case 3:
-				{
-				_localctx = new Constructor_expressionContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-				State = 115;
-				Match(NEW);
-				State = 116;
-				((Constructor_expressionContext)_localctx).name = Match(ID);
-				State = 117;
-				argument_list();
-				}
-				break;
-			case 4:
+			case STRING:
+			case INTEGER:
+			case BOOLEAN:
+			case REAL:
 				{
 				_localctx = new Literal_expressionContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 118;
-				((Literal_expressionContext)_localctx).value = Match(STRING);
+				State = 72;
+				literal();
 				}
 				break;
-			case 5:
-				{
-				_localctx = new Literal_expressionContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-				State = 119;
-				((Literal_expressionContext)_localctx).value = Match(INTEGER);
-				}
-				break;
-			case 6:
-				{
-				_localctx = new Literal_expressionContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-				State = 120;
-				((Literal_expressionContext)_localctx).value = Match(BOOLEAN);
-				}
-				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 			Context.Stop = TokenStream.LT(-1);
-			State = 144;
+			State = 89;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,12,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,9,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( ParseListeners!=null )
 						TriggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					State = 142;
+					State = 87;
 					ErrorHandler.Sync(this);
-					switch ( Interpreter.AdaptivePredict(TokenStream,11,Context) ) {
+					switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
 					case 1:
 						{
 						_localctx = new Operator_expressionContext(new ExpressionContext(_parentctx, _parentState));
 						((Operator_expressionContext)_localctx).left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 123;
-						if (!(Precpred(Context, 10))) throw new FailedPredicateException(this, "Precpred(Context, 10)");
-						State = 124;
+						State = 75;
+						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+						State = 76;
 						((Operator_expressionContext)_localctx).op = Match(ADD);
-						State = 125;
-						((Operator_expressionContext)_localctx).right = expression(11);
+						State = 77;
+						((Operator_expressionContext)_localctx).right = expression(6);
 						}
 						break;
 					case 2:
@@ -875,12 +573,12 @@ public partial class AntlrEntityParser : Parser {
 						_localctx = new Operator_expressionContext(new ExpressionContext(_parentctx, _parentState));
 						((Operator_expressionContext)_localctx).left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 126;
-						if (!(Precpred(Context, 9))) throw new FailedPredicateException(this, "Precpred(Context, 9)");
-						State = 127;
+						State = 78;
+						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
+						State = 79;
 						((Operator_expressionContext)_localctx).op = Match(SUB);
-						State = 128;
-						((Operator_expressionContext)_localctx).right = expression(10);
+						State = 80;
+						((Operator_expressionContext)_localctx).right = expression(5);
 						}
 						break;
 					case 3:
@@ -888,12 +586,12 @@ public partial class AntlrEntityParser : Parser {
 						_localctx = new Operator_expressionContext(new ExpressionContext(_parentctx, _parentState));
 						((Operator_expressionContext)_localctx).left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 129;
-						if (!(Precpred(Context, 8))) throw new FailedPredicateException(this, "Precpred(Context, 8)");
-						State = 130;
+						State = 81;
+						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
+						State = 82;
 						((Operator_expressionContext)_localctx).op = Match(MUL);
-						State = 131;
-						((Operator_expressionContext)_localctx).right = expression(9);
+						State = 83;
+						((Operator_expressionContext)_localctx).right = expression(4);
 						}
 						break;
 					case 4:
@@ -901,48 +599,20 @@ public partial class AntlrEntityParser : Parser {
 						_localctx = new Operator_expressionContext(new ExpressionContext(_parentctx, _parentState));
 						((Operator_expressionContext)_localctx).left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 132;
-						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
-						State = 133;
+						State = 84;
+						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
+						State = 85;
 						((Operator_expressionContext)_localctx).op = Match(DIV);
-						State = 134;
-						((Operator_expressionContext)_localctx).right = expression(8);
-						}
-						break;
-					case 5:
-						{
-						_localctx = new Invocation_expressionContext(new ExpressionContext(_parentctx, _parentState));
-						((Invocation_expressionContext)_localctx).context = _prevctx;
-						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 135;
-						if (!(Precpred(Context, 12))) throw new FailedPredicateException(this, "Precpred(Context, 12)");
-						State = 136;
-						Match(DOT);
-						State = 137;
-						((Invocation_expressionContext)_localctx).target = Match(ID);
-						State = 138;
-						argument_list();
-						}
-						break;
-					case 6:
-						{
-						_localctx = new Reference_expressionContext(new ExpressionContext(_parentctx, _parentState));
-						((Reference_expressionContext)_localctx).context = _prevctx;
-						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 139;
-						if (!(Precpred(Context, 11))) throw new FailedPredicateException(this, "Precpred(Context, 11)");
-						State = 140;
-						Match(DOT);
-						State = 141;
-						((Reference_expressionContext)_localctx).target = Match(ID);
+						State = 86;
+						((Operator_expressionContext)_localctx).right = expression(3);
 						}
 						break;
 					}
 					} 
 				}
-				State = 146;
+				State = 91;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,12,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,9,Context);
 			}
 			}
 		}
@@ -953,81 +623,6 @@ public partial class AntlrEntityParser : Parser {
 		}
 		finally {
 			UnrollRecursionContexts(_parentctx);
-		}
-		return _localctx;
-	}
-
-	public partial class Argument_listContext : ParserRuleContext {
-		public ExpressionContext _expression;
-		public IList<ExpressionContext> _arguments = new List<ExpressionContext>();
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAREN() { return GetToken(AntlrEntityParser.LPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAREN() { return GetToken(AntlrEntityParser.RPAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext[] expression() {
-			return GetRuleContexts<ExpressionContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression(int i) {
-			return GetRuleContext<ExpressionContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(AntlrEntityParser.COMMA); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
-			return GetToken(AntlrEntityParser.COMMA, i);
-		}
-		public Argument_listContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_argument_list; } }
-	}
-
-	[RuleVersion(0)]
-	public Argument_listContext argument_list() {
-		Argument_listContext _localctx = new Argument_listContext(Context, State);
-		EnterRule(_localctx, 22, RULE_argument_list);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 147;
-			Match(LPAREN);
-			State = 156;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 62914624L) != 0)) {
-				{
-				State = 148;
-				_localctx._expression = expression(0);
-				_localctx._arguments.Add(_localctx._expression);
-				State = 153;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				while (_la==COMMA) {
-					{
-					{
-					State = 149;
-					Match(COMMA);
-					State = 150;
-					_localctx._expression = expression(0);
-					_localctx._arguments.Add(_localctx._expression);
-					}
-					}
-					State = 155;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-				}
-				}
-			}
-
-			State = 158;
-			Match(RPAREN);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
 		}
 		return _localctx;
 	}
@@ -1049,6 +644,11 @@ public partial class AntlrEntityParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(AntlrEntityParser.STRING, 0); }
 		public String_literalContext(LiteralContext context) { CopyFrom(context); }
 	}
+	public partial class Real_literalContext : LiteralContext {
+		public IToken value;
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode REAL() { return GetToken(AntlrEntityParser.REAL, 0); }
+		public Real_literalContext(LiteralContext context) { CopyFrom(context); }
+	}
 	public partial class Boolean_literalContext : LiteralContext {
 		public IToken value;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BOOLEAN() { return GetToken(AntlrEntityParser.BOOLEAN, 0); }
@@ -1063,16 +663,16 @@ public partial class AntlrEntityParser : Parser {
 	[RuleVersion(0)]
 	public LiteralContext literal() {
 		LiteralContext _localctx = new LiteralContext(Context, State);
-		EnterRule(_localctx, 24, RULE_literal);
+		EnterRule(_localctx, 14, RULE_literal);
 		try {
-			State = 163;
+			State = 96;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case STRING:
 				_localctx = new String_literalContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 160;
+				State = 92;
 				((String_literalContext)_localctx).value = Match(STRING);
 				}
 				break;
@@ -1080,7 +680,7 @@ public partial class AntlrEntityParser : Parser {
 				_localctx = new Integer_literalContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 161;
+				State = 93;
 				((Integer_literalContext)_localctx).value = Match(INTEGER);
 				}
 				break;
@@ -1088,8 +688,16 @@ public partial class AntlrEntityParser : Parser {
 				_localctx = new Boolean_literalContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 162;
+				State = 94;
 				((Boolean_literalContext)_localctx).value = Match(BOOLEAN);
+				}
+				break;
+			case REAL:
+				_localctx = new Real_literalContext(_localctx);
+				EnterOuterAlt(_localctx, 4);
+				{
+				State = 95;
+				((Real_literalContext)_localctx).value = Match(REAL);
 				}
 				break;
 			default:
@@ -1109,75 +717,50 @@ public partial class AntlrEntityParser : Parser {
 
 	public override bool Sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 10: return expression_sempred((ExpressionContext)_localctx, predIndex);
+		case 6: return expression_sempred((ExpressionContext)_localctx, predIndex);
 		}
 		return true;
 	}
 	private bool expression_sempred(ExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 0: return Precpred(Context, 10);
-		case 1: return Precpred(Context, 9);
-		case 2: return Precpred(Context, 8);
-		case 3: return Precpred(Context, 7);
-		case 4: return Precpred(Context, 12);
-		case 5: return Precpred(Context, 11);
+		case 0: return Precpred(Context, 5);
+		case 1: return Precpred(Context, 4);
+		case 2: return Precpred(Context, 3);
+		case 3: return Precpred(Context, 2);
 		}
 		return true;
 	}
 
 	private static int[] _serializedATN = {
-		4,1,27,166,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
-		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,1,0,1,0,1,0,5,0,30,8,
-		0,10,0,12,0,33,9,0,1,0,5,0,36,8,0,10,0,12,0,39,9,0,1,1,1,1,1,1,1,2,1,2,
-		1,2,1,2,5,2,48,8,2,10,2,12,2,51,9,2,1,2,5,2,54,8,2,10,2,12,2,57,9,2,1,
-		2,3,2,60,8,2,1,3,1,3,1,3,1,3,1,4,1,4,1,4,1,4,1,4,5,4,71,8,4,10,4,12,4,
-		74,9,4,3,4,76,8,4,1,4,1,4,1,4,3,4,81,8,4,1,4,1,4,5,4,85,8,4,10,4,12,4,
-		88,9,4,1,4,1,4,1,5,1,5,1,5,1,5,1,6,1,6,3,6,98,8,6,1,7,1,7,1,7,1,7,1,7,
-		1,8,1,8,1,8,1,8,1,9,1,9,1,9,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,
-		10,1,10,3,10,122,8,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
-		1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,5,10,143,8,10,10,10,12,10,
-		146,9,10,1,11,1,11,1,11,1,11,5,11,152,8,11,10,11,12,11,155,9,11,3,11,157,
-		8,11,1,11,1,11,1,12,1,12,1,12,3,12,164,8,12,1,12,0,1,20,13,0,2,4,6,8,10,
-		12,14,16,18,20,22,24,0,0,177,0,26,1,0,0,0,2,40,1,0,0,0,4,43,1,0,0,0,6,
-		61,1,0,0,0,8,65,1,0,0,0,10,91,1,0,0,0,12,97,1,0,0,0,14,99,1,0,0,0,16,104,
-		1,0,0,0,18,108,1,0,0,0,20,121,1,0,0,0,22,147,1,0,0,0,24,163,1,0,0,0,26,
-		27,5,2,0,0,27,31,5,25,0,0,28,30,3,2,1,0,29,28,1,0,0,0,30,33,1,0,0,0,31,
-		29,1,0,0,0,31,32,1,0,0,0,32,37,1,0,0,0,33,31,1,0,0,0,34,36,3,4,2,0,35,
-		34,1,0,0,0,36,39,1,0,0,0,37,35,1,0,0,0,37,38,1,0,0,0,38,1,1,0,0,0,39,37,
-		1,0,0,0,40,41,5,3,0,0,41,42,5,25,0,0,42,3,1,0,0,0,43,44,5,1,0,0,44,59,
-		5,25,0,0,45,49,5,13,0,0,46,48,3,6,3,0,47,46,1,0,0,0,48,51,1,0,0,0,49,47,
-		1,0,0,0,49,50,1,0,0,0,50,55,1,0,0,0,51,49,1,0,0,0,52,54,3,8,4,0,53,52,
-		1,0,0,0,54,57,1,0,0,0,55,53,1,0,0,0,55,56,1,0,0,0,56,58,1,0,0,0,57,55,
-		1,0,0,0,58,60,5,14,0,0,59,45,1,0,0,0,59,60,1,0,0,0,60,5,1,0,0,0,61,62,
-		5,25,0,0,62,63,5,7,0,0,63,64,5,25,0,0,64,7,1,0,0,0,65,66,5,25,0,0,66,75,
-		5,15,0,0,67,72,3,10,5,0,68,69,5,9,0,0,69,71,3,10,5,0,70,68,1,0,0,0,71,
-		74,1,0,0,0,72,70,1,0,0,0,72,73,1,0,0,0,73,76,1,0,0,0,74,72,1,0,0,0,75,
-		67,1,0,0,0,75,76,1,0,0,0,76,77,1,0,0,0,77,80,5,16,0,0,78,79,5,7,0,0,79,
-		81,5,25,0,0,80,78,1,0,0,0,80,81,1,0,0,0,81,82,1,0,0,0,82,86,5,13,0,0,83,
-		85,3,12,6,0,84,83,1,0,0,0,85,88,1,0,0,0,86,84,1,0,0,0,86,87,1,0,0,0,87,
-		89,1,0,0,0,88,86,1,0,0,0,89,90,5,14,0,0,90,9,1,0,0,0,91,92,5,25,0,0,92,
-		93,5,7,0,0,93,94,5,25,0,0,94,11,1,0,0,0,95,98,3,14,7,0,96,98,3,18,9,0,
-		97,95,1,0,0,0,97,96,1,0,0,0,98,13,1,0,0,0,99,100,5,5,0,0,100,101,3,16,
-		8,0,101,102,5,21,0,0,102,103,3,20,10,0,103,15,1,0,0,0,104,105,5,25,0,0,
-		105,106,5,7,0,0,106,107,5,25,0,0,107,17,1,0,0,0,108,109,5,4,0,0,109,110,
-		3,20,10,0,110,19,1,0,0,0,111,112,6,10,-1,0,112,113,5,25,0,0,113,122,3,
-		22,11,0,114,122,5,25,0,0,115,116,5,6,0,0,116,117,5,25,0,0,117,122,3,22,
-		11,0,118,122,5,22,0,0,119,122,5,23,0,0,120,122,5,24,0,0,121,111,1,0,0,
-		0,121,114,1,0,0,0,121,115,1,0,0,0,121,118,1,0,0,0,121,119,1,0,0,0,121,
-		120,1,0,0,0,122,144,1,0,0,0,123,124,10,10,0,0,124,125,5,17,0,0,125,143,
-		3,20,10,11,126,127,10,9,0,0,127,128,5,18,0,0,128,143,3,20,10,10,129,130,
-		10,8,0,0,130,131,5,19,0,0,131,143,3,20,10,9,132,133,10,7,0,0,133,134,5,
-		20,0,0,134,143,3,20,10,8,135,136,10,12,0,0,136,137,5,10,0,0,137,138,5,
-		25,0,0,138,143,3,22,11,0,139,140,10,11,0,0,140,141,5,10,0,0,141,143,5,
-		25,0,0,142,123,1,0,0,0,142,126,1,0,0,0,142,129,1,0,0,0,142,132,1,0,0,0,
-		142,135,1,0,0,0,142,139,1,0,0,0,143,146,1,0,0,0,144,142,1,0,0,0,144,145,
-		1,0,0,0,145,21,1,0,0,0,146,144,1,0,0,0,147,156,5,15,0,0,148,153,3,20,10,
-		0,149,150,5,9,0,0,150,152,3,20,10,0,151,149,1,0,0,0,152,155,1,0,0,0,153,
-		151,1,0,0,0,153,154,1,0,0,0,154,157,1,0,0,0,155,153,1,0,0,0,156,148,1,
-		0,0,0,156,157,1,0,0,0,157,158,1,0,0,0,158,159,5,16,0,0,159,23,1,0,0,0,
-		160,164,5,22,0,0,161,164,5,23,0,0,162,164,5,24,0,0,163,160,1,0,0,0,163,
-		161,1,0,0,0,163,162,1,0,0,0,164,25,1,0,0,0,16,31,37,49,55,59,72,75,80,
-		86,97,121,142,144,153,156,163
+		4,1,26,99,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		7,7,1,0,1,0,1,0,5,0,20,8,0,10,0,12,0,23,9,0,1,0,5,0,26,8,0,10,0,12,0,29,
+		9,0,1,0,5,0,32,8,0,10,0,12,0,35,9,0,1,1,1,1,1,1,1,2,1,2,1,2,1,3,1,3,1,
+		3,1,3,3,3,47,8,3,1,3,1,3,5,3,51,8,3,10,3,12,3,54,9,3,1,3,1,3,1,4,1,4,1,
+		4,1,4,3,4,62,8,4,1,5,1,5,1,5,1,6,1,6,1,6,3,6,70,8,6,1,6,1,6,3,6,74,8,6,
+		1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,5,6,88,8,6,10,6,12,6,91,
+		9,6,1,7,1,7,1,7,1,7,3,7,97,8,7,1,7,0,1,12,8,0,2,4,6,8,10,12,14,0,0,105,
+		0,16,1,0,0,0,2,36,1,0,0,0,4,39,1,0,0,0,6,42,1,0,0,0,8,57,1,0,0,0,10,63,
+		1,0,0,0,12,73,1,0,0,0,14,96,1,0,0,0,16,17,5,2,0,0,17,21,5,24,0,0,18,20,
+		3,2,1,0,19,18,1,0,0,0,20,23,1,0,0,0,21,19,1,0,0,0,21,22,1,0,0,0,22,27,
+		1,0,0,0,23,21,1,0,0,0,24,26,3,4,2,0,25,24,1,0,0,0,26,29,1,0,0,0,27,25,
+		1,0,0,0,27,28,1,0,0,0,28,33,1,0,0,0,29,27,1,0,0,0,30,32,3,6,3,0,31,30,
+		1,0,0,0,32,35,1,0,0,0,33,31,1,0,0,0,33,34,1,0,0,0,34,1,1,0,0,0,35,33,1,
+		0,0,0,36,37,5,3,0,0,37,38,5,24,0,0,38,3,1,0,0,0,39,40,5,4,0,0,40,41,5,
+		24,0,0,41,5,1,0,0,0,42,43,5,1,0,0,43,46,5,24,0,0,44,45,5,5,0,0,45,47,5,
+		24,0,0,46,44,1,0,0,0,46,47,1,0,0,0,47,48,1,0,0,0,48,52,5,11,0,0,49,51,
+		3,8,4,0,50,49,1,0,0,0,51,54,1,0,0,0,52,50,1,0,0,0,52,53,1,0,0,0,53,55,
+		1,0,0,0,54,52,1,0,0,0,55,56,5,12,0,0,56,7,1,0,0,0,57,58,5,24,0,0,58,59,
+		5,5,0,0,59,61,5,24,0,0,60,62,3,10,5,0,61,60,1,0,0,0,61,62,1,0,0,0,62,9,
+		1,0,0,0,63,64,5,19,0,0,64,65,3,12,6,0,65,11,1,0,0,0,66,69,6,6,-1,0,67,
+		68,5,24,0,0,68,70,5,8,0,0,69,67,1,0,0,0,69,70,1,0,0,0,70,71,1,0,0,0,71,
+		74,5,24,0,0,72,74,3,14,7,0,73,66,1,0,0,0,73,72,1,0,0,0,74,89,1,0,0,0,75,
+		76,10,5,0,0,76,77,5,15,0,0,77,88,3,12,6,6,78,79,10,4,0,0,79,80,5,16,0,
+		0,80,88,3,12,6,5,81,82,10,3,0,0,82,83,5,17,0,0,83,88,3,12,6,4,84,85,10,
+		2,0,0,85,86,5,18,0,0,86,88,3,12,6,3,87,75,1,0,0,0,87,78,1,0,0,0,87,81,
+		1,0,0,0,87,84,1,0,0,0,88,91,1,0,0,0,89,87,1,0,0,0,89,90,1,0,0,0,90,13,
+		1,0,0,0,91,89,1,0,0,0,92,97,5,20,0,0,93,97,5,21,0,0,94,97,5,22,0,0,95,
+		97,5,23,0,0,96,92,1,0,0,0,96,93,1,0,0,0,96,94,1,0,0,0,96,95,1,0,0,0,97,
+		15,1,0,0,0,11,21,27,33,46,52,61,69,73,87,89,96
 	};
 
 	public static readonly ATN _ATN =

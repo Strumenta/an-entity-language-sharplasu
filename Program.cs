@@ -1,4 +1,5 @@
 ﻿using Strumenta.Entity;
+using Strumenta.Entity.Parser;
 using Strumenta.Sharplasu.Model;
 using Strumenta.Sharplasu.SymbolResolution;
 using System.Xml.Linq;
@@ -93,16 +94,17 @@ namespace Strumenta.Entity
 
         static void Main(string[] args)
         {
-            var cu = GetCompilationUnit();
-            cu.AssertNotAllReferencesResolved();
+            EntitySharplasuParser parser = new EntitySharplasuParser();
+            var result = parser.Parse(new FileInfo("../../../Examples/example.entity"));   
             SimpleModuleFinder moduleFinder = new SimpleModuleFinder();            
             ExampleSemantics semantics = new ExampleSemantics(moduleFinder);
-            semantics.SymbolResolver.ResolveSymbols(cu);
-            foreach(var issue in semantics.Issues)
+            semantics.SemanticEnrichment(result.Root);
+            Console.WriteLine(result.Root.MultiLineString());            
+            foreach (var issue in semantics.Issues)
             {
                 Console.WriteLine(issue.Message);
             }
-            cu.AssertAllReferencesResolved();
+            result.Root.AssertAllReferencesResolved();
         }
     }
 }
