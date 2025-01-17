@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Strumenta.Sharplasu.Traversing;
 using System.Reflection;
+using System.Text;
 
 namespace Strumenta.Entity
 {
@@ -44,15 +45,15 @@ namespace Strumenta.Entity
         public DeclarativeLocalSymbolResolver SymbolResolver { get; set; }
         public List<Issue> Issues { get; set; } = new List<Issue>();
         private IModuleFinder ModuleFinder { get; set; }
-        private TypeCalculator TypeCalculator { get; set; }
+        public TypeCalculator TypeCalculator { get; set; }      
 
-        public void SemanticEnrichment(Node node)
+        public List<Issue> SemanticEnrichment(Node node)
         {
             SymbolResolver.ResolveSymbols(node);
             node.WalkDescendants<Expression>().ToList().ForEach(expression => {
-                TypeCalculator.SetTypeIfNeeded(expression);               
-            }
-            );            
+                TypeCalculator.SetTypeIfNeeded(expression);
+            });
+            return Issues;
         }
 
         Scope ModuleLevelTypes(Node ctx)
@@ -63,6 +64,7 @@ namespace Strumenta.Entity
             {
                 // let's define types
                 module.Types.ForEach(type => scope.Define(type));
+                module.Entities.ForEach(type => scope.Define(type));
                 foreach (var import in module.Imports)
                 {
                     SymbolResolver.ResolveSymbols(import);
@@ -85,7 +87,7 @@ namespace Strumenta.Entity
 
             return scope;
         }
-
+        
         Scope ClassHierarchyEntities(ClassDecl ctx)
         {
             var scope = new Scope();
@@ -100,11 +102,26 @@ namespace Strumenta.Entity
             return scope;
         }
 
+        Scope ClassElements(ClassDecl ctx)
+        {
+            var scope = new Scope();
+
+            ctx.Features.ForEach(type => scope.Define(type));
+            var superclass = ctx.Superclass;
+            if (superclass != null && superclass.Resolved)
+            {
+                // let's define superclasses
+                scope.Parent = ClassElements(superclass.Referred);
+            }
+
+            return scope;
+        }
+
         Scope ClassLevelTypes(ClassDecl ctx)
         {
             var scope = new Scope();
             
-            ctx.Features.ForEach(type => scope.Define(type));            
+            ctx.Features.ForEach(feature => scope.Define(feature));
             var superclass = ctx.Superclass;
             if (superclass != null && superclass.Resolved)
             {
@@ -131,29 +148,26 @@ namespace Strumenta.Entity
                 var scope = ModuleLevelTypes(feature);                
                 return scope;
             });
-            SymbolResolver.ScopeFor(typeof(ReferenceExpression).GetProperty("Context"), (ReferenceExpression reference) =>
-            {
-                var scope = new Scope();
-                var classParent = reference.FindAncestorOfType<ClassDecl>();
-                if (classParent != null)
-                    scope = ClassHierarchyEntities(reference.FindAncestorOfType<ClassDecl>());
-                else
-                    Issues.Add(Issue.Semantic("The class containing this expression has no superclasses. The Context cannot be solved.", reference.Position));
-                return scope;
-            });
             SymbolResolver.ScopeFor(typeof(ReferenceExpression).GetProperty("Target"), (ReferenceExpression reference) =>
             {
                 var scope = new Scope();
-                if (reference.Context == null)
+
+                var classParent = reference.FindAncestorOfType<ClassDecl>();
+                if (classParent != null)
+                   scope.Parent = ClassLevelTypes(classParent);                
+
+                if (reference.Context != null)
                 {
-                    var classParent = reference.FindAncestorOfType<ClassDecl>();
-                    if (classParent != null)
-                        scope.Parent = ClassLevelTypes(classParent);
+                    SymbolResolver.ResolveNode(reference.Context);
+
+                    var type = TypeCalculator.GetType(reference.Context) as ClassDecl;
+
+                    if (type != null)
+                    {
+                        type.Features.ForEach(it => scope.Define(it));
+                    }
                 }
-                else if (reference.Context.Resolved)                
-                {
-                    reference.Context.Referred.Features.ForEach(it => scope.Define(it));
-                }
+
                 return scope;
             });
             SymbolResolver.ScopeFor(typeof(Import).GetProperty("Module"), (Import import) =>
@@ -197,7 +211,6 @@ namespace Strumenta.Entity
             return node.GetTypeSemantics();
         }
     }
-
 
     public class EntityTypeCalculator : TypeCalculator
     {
@@ -254,15 +267,12 @@ namespace Strumenta.Entity
                             throw new NotImplementedException($"Operator not supported: {opExpr.Operator}");
                     }
                 case ReferenceExpression refExpr:
-                    if(refExpr.Context == null)
-                        return GetTypeOfReference<ReferenceExpression, FeatureDecl>(refExpr, typeof(ReferenceExpression).GetProperty("Target"));
-                    else
                     {
                         SymbolResolver.ResolveNode(refExpr);
                         return GetTypeOfReference<ReferenceExpression, FeatureDecl>(refExpr, typeof(ReferenceExpression).GetProperty("Target"));
-                    }
+                    }             
                 case FeatureDecl featureDecl:
-                    if (featureDecl.Type.Resolved)
+                    if (featureDecl.Type.Resolved)                        
                         return featureDecl.Type.Referred;
                     else
                         return null;

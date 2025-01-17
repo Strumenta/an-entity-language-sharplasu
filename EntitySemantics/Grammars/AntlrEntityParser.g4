@@ -24,7 +24,7 @@ entity_declaration:
 ;
 
 feature_declaration:
-    name=ID COLON type=ID assignment?
+    name=ID type=ID assignment?
 ;
 
 assignment:
@@ -32,12 +32,13 @@ assignment:
 ;
 
 expression
-    : (context=ID DOT)? target=ID                       #reference_expression
+    : context=expression DOT target=ID                  #reference_expression
     | left=expression op=ADD right=expression           #operator_expression
     | left=expression op=SUB right=expression           #operator_expression
     | left=expression op=MUL right=expression           #operator_expression
     | left=expression op=DIV right=expression           #operator_expression
     | literal                                           #literal_expression
+    | target=ID                                         #reference_expression
     ;
 
 literal

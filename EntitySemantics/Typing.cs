@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Strumenta.Entity.Semantics
 {
-    public interface IType { }
+    public interface IType {
+        public string Name { get; }
+    }
 
     internal static class Typing
     {
@@ -33,7 +35,11 @@ namespace Strumenta.Entity.Semantics
         }
     }
 
-    public class UnitType : Node, IType { }
+    public class UnitType : Node, IType {
+        public string Name { 
+            get => "Unit"; 
+         }        
+    }
 
     public static class NodeExtensions
     {

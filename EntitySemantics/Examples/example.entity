@@ -2,8 +2,6 @@
 
 import standard
 
-type address
-
 class base {
 	name string
 	description string
@@ -14,11 +12,20 @@ class aged : base {
 }
 
 class person : aged {
+	location address
 	speed integer = 2
 }
 
-class athlete : person {
-	speed integer = person.speed * 2
+class address {
+	note base
+	city string
+	street string
+	number integer	
+}
+
+class athlete : person {			
+	deliveryNote string = location.note.description
+	luckyNumber integer = location.number + 3
 }
 
 class car : aged {

@@ -69,12 +69,11 @@ public class EntityParseTreeToAstTransformer : ASTTransformer
         {            
             return source switch
             {
-                Reference_expressionContext reference => new ReferenceExpression(
+                Reference_expressionContext reference => new ReferenceExpression(  
                     reference.context != null ?
-                    new ReferenceByName<ClassDecl>(reference.context.Text)
-                    : null,
-                    new ReferenceByName<FeatureDecl>(reference.target.Text)
-                ),
+                    Transform(reference.context).WithOrigin(new ParseTreeOrigin(reference.context)) as Expression : null,
+                     new ReferenceByName<FeatureDecl>(reference.target.Text)
+                ),       
                 Literal_expressionContext literal => Transform(literal.literal()).WithOrigin(new ParseTreeOrigin(literal)) as Expression,
                 Operator_expressionContext operation =>
                     new OperatorExpression(

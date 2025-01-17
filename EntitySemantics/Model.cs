@@ -91,14 +91,13 @@ namespace Strumenta.Entity
             Right = right;
             Operator = operatorType;
         }
-    }        
+    }
 
     public class ReferenceExpression : Expression
     {
-        public ReferenceByName<ClassDecl>? Context { get; set; }
+        public Expression? Context { get; set; }
         public ReferenceByName<FeatureDecl> Target { get; set; }
-
-        public ReferenceExpression(ReferenceByName<ClassDecl> context, ReferenceByName<FeatureDecl> target)
+        public ReferenceExpression(Expression context, ReferenceByName<FeatureDecl> target)
         {
             Context = context;
             Target = target;
